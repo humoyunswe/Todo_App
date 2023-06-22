@@ -1,0 +1,40 @@
+{% extends 'todo/base.html' %}
+
+{% block heading %}
+    <title>Todo_App</title>
+{% endblock heading %}
+
+
+{% block content %}
+    <div class="place"></div>
+    <div class="container">
+            <div class="card_demo">
+                <img src="https://www.sheknows.com/wp-content/uploads/2018/08/magnetic_board_to_do_list_qxz844.jpeg">
+            </div>
+        <div class="card">
+            <h1>Todo List</h1>
+            <form method="post" action="{% url 'todo:add' %}">
+                {% csrf_token %}
+                <input type="text" name="title" placeholder="New Task" required>
+                <button type="submit" name="submit">Add</button>
+                {% for todo in todo_list %}
+                    <div class="list_group_item {% if todo.isCompleted %} todo_complete {% endif %}">
+                        <form method="post" action="{% url 'todo:update' todo.id %}">
+                            {% csrf_token %}
+                            <input class="check" type="checkbox" name="isCompleted" onchange="this.form.submit()" {% if todo.isCompleted %} checked
+                            {% endif %}>
+                        </form>
+                        <p class="todo_text">{{ todo.title }}</p>
+                        <p>{{ todo.created_at|date:"j/n/Y" }}</p>
+                            <a href="{% url 'todo:delete' todo.id %}" title="Delete">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                    </div>
+                {% endfor %}
+            </form>
+            <div class="card_demo2">
+                <img src="https://i.pinimg.com/564x/93/24/6d/93246dab6526ac199cc94f0fd319a1af.jpg">
+            </div>
+        </div>
+    </div>
+{% endblock content %}
